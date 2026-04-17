@@ -31,3 +31,12 @@ export async function upgradePlan() {
   });
   return response.json();
 }
+
+export async function selectPlan(plan) {
+  const response = await fetch(`${API_BASE}/quota/select-plan`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ plan })
+  });
+  return response.json();
+}

@@ -8,7 +8,7 @@ import {
   Title,
   Tooltip,
 } from 'chart.js'
-import { generateText, getQuotaStatus, getQuotaHistory, upgradePlan } from './services/api'
+import { generateText, getQuotaStatus, getQuotaHistory, upgradePlan, selectPlan } from './services/api'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
@@ -30,7 +30,9 @@ const TEXTS = {
   cancelButton: 'Más tarde',
   initialMessage: '¡Hola! Envíame un prompt y generaré texto para ti. Tu uso registra en tiempo real.',
   you: 'Tú',
-  ai: 'IA'
+  ai: 'IA',
+  selectPlan: 'Seleccionar Plan',
+  planChanged: 'Plan cambiado exitosamente'
 }
 
 function App() {
@@ -157,6 +159,20 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <h1>{TEXTS.header}</h1>
+        <div className="plan-selector">
+          <select 
+            value={plan} 
+            onChange={async (e) => {
+              await selectPlan(e.target.value)
+              await loadData()
+            }}
+            className="plan-select"
+          >
+            <option value="FREE">FREE</option>
+            <option value="PRO">PRO</option>
+            <option value="ENTERPRISE">ENTERPRISE</option>
+          </select>
+        </div>
         <span className={`plan-badge ${planClass}`}>{plan}</span>
       </header>
 
