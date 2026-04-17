@@ -21,7 +21,7 @@ const TEXTS = {
   chatPlaceholder: 'Escribe tu prompt...',
   send: 'Enviar',
   wait: 'Esperar',
-  tokensWillUse: '~tokens serán usados',
+  tokensWillUse: 'tokens serán usados',
   generating: 'Generando...',
   usageHistory: 'Historial de Uso (Últimos 7 días)',
   upgradeTitle: 'Upgrade Tu Plan',
