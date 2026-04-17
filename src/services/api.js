@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api';
+const API_BASE = 'https://proxybackend-fe5z.onrender.com/api';
 
 export async function generateText(prompt) {
   const response = await fetch(`${API_BASE}/ai/generate`, {
