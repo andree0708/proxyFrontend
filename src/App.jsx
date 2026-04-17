@@ -12,8 +12,29 @@ import { generateText, getQuotaStatus, getQuotaHistory, upgradePlan } from './se
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
+const TEXTS = {
+  header: 'Plataforma IA con Proxy',
+  monthlyTokens: 'Tokens Mensuales',
+  requestsPerMin: 'Solicitudes/min',
+  resets: 'Se renueva:',
+  resetIn: 'Reinicio en',
+  chatPlaceholder: 'Escribe tu prompt...',
+  send: 'Enviar',
+  wait: 'Esperar',
+  tokensWillUse: '~tokens serán usados',
+  generating: 'Generando...',
+  usageHistory: 'Historial de Uso (Últimos 7 días)',
+  upgradeTitle: 'Upgrade Tu Plan',
+  upgradeMessage: 'Has alcanzado tu cuota mensual.Upgrade a PRO para continuar usando el servicio.',
+  upgradeButton: 'Upgrade a PRO ($9.99/mes)',
+  cancelButton: 'Más tarde',
+  initialMessage: '¡Hola! Envíame un prompt y generaré texto para ti.Tu uso se纪录a en tiempo real.',
+  you: 'Tú',
+  ai: 'IA'
+}
+
 function App() {
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([{ role: 'ai', text: TEXTS.initialMessage }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [quotaStatus, setQuotaStatus] = useState(null)
@@ -135,14 +156,14 @@ function App() {
   return (
     <div className="app-container">
       <header className="app-header">
-        <h1>AI Proxy Platform</h1>
+        <h1>{TEXTS.header}</h1>
         <span className={`plan-badge ${planClass}`}>{plan}</span>
       </header>
 
       <div className="status-panel">
         <div className="status-grid">
           <div className="quota-section">
-            <h3>Monthly Tokens</h3>
+            <h3>{TEXTS.monthlyTokens}</h3>
             <div className="progress-bar">
               <div 
                 className={`progress-fill ${tokenPercent > 80 ? 'warning' : ''} ${tokenPercent > 95 ? 'danger' : ''}`}
@@ -151,12 +172,12 @@ function App() {
             </div>
             <div className="quota-info">
               <span>{formatNumber(tokensUsed)} / {formatNumber(tokensTotal)}</span>
-              <span>Resets: {quotaStatus?.resetDate}</span>
+              <span>{TEXTS.resets} {quotaStatus?.resetDate}</span>
             </div>
           </div>
 
           <div className="requests-section">
-            <h3>Requests/min</h3>
+            <h3>{TEXTS.requestsPerMin}</h3>
             <div className="progress-bar">
               <div 
                 className={`progress-fill ${requestPercent > 80 ? 'warning' : ''} ${requestPercent > 95 ? 'danger' : ''}`}
@@ -166,7 +187,7 @@ function App() {
             <div className="quota-info">
               <span>{requestsUsed} / {formatNumber(requestsTotal)}</span>
               {rateLimitCountdown > 0 && (
-                <span className="countdown">Reset in {rateLimitCountdown}s</span>
+                <span className="countdown">{TEXTS.resetIn} {rateLimitCountdown}s</span>
               )}
             </div>
           </div>
@@ -175,15 +196,9 @@ function App() {
 
       <div className="chat-container">
         <div className="chat-messages">
-          {messages.length === 0 && (
-            <div className="message ai">
-              <div className="message-label">AI</div>
-              Hello! Send me a prompt and I'll generate text for you. Your usage is tracked in real-time.
-            </div>
-          )}
           {messages.map((msg, i) => (
             <div key={i} className={`message ${msg.role}`}>
-              <div className="message-label">{msg.role === 'user' ? 'You' : 'AI'}</div>
+              <div className="message-label">{msg.role === 'user' ? TEXTS.you : TEXTS.ai}</div>
               {msg.text}
             </div>
           ))}
@@ -191,7 +206,7 @@ function App() {
             <div className="message ai">
               <div className="loading">
                 <div className="spinner"></div>
-                Generating...
+                {TEXTS.generating}
               </div>
             </div>
           )}
@@ -203,7 +218,7 @@ function App() {
             <div className="chat-input-wrapper">
               <textarea
                 className="chat-input"
-                placeholder="Enter your prompt..."
+                placeholder={TEXTS.chatPlaceholder}
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => {
@@ -216,7 +231,7 @@ function App() {
               />
               {input && (
                 <div className="estimator">
-                  ~{estimateTokens(input)} tokens will be used
+                  ~{estimateTokens(input)} {TEXTS.tokensWillUse}
                 </div>
               )}
             </div>
@@ -225,27 +240,27 @@ function App() {
               className="send-button"
               disabled={loading || !input.trim() || rateLimitCountdown > 0}
             >
-              {rateLimitCountdown > 0 ? `Wait ${rateLimitCountdown}s` : 'Send'}
+              {rateLimitCountdown > 0 ? `${TEXTS.wait} ${rateLimitCountdown}s` : TEXTS.send}
             </button>
           </div>
         </form>
       </div>
 
       <div className="history-panel">
-        <h3>Usage History (Last 7 Days)</h3>
+        <h3>{TEXTS.usageHistory}</h3>
         <Bar data={chartData} options={chartOptions} />
       </div>
 
       {showUpgradeModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h2>Upgrade Your Plan</h2>
-            <p>You've reached your monthly quota. Upgrade to PRO to continue using the service.</p>
+            <h2>{TEXTS.upgradeTitle}</h2>
+            <p>{TEXTS.upgradeMessage}</p>
             <button className="upgrade-button" onClick={handleUpgrade}>
-              Upgrade to PRO ($9.99/mo)
+              {TEXTS.upgradeButton}
             </button>
             <button className="cancel-button" onClick={() => setShowUpgradeModal(false)}>
-              Maybe Later
+              {TEXTS.cancelButton}
             </button>
           </div>
         </div>
