@@ -165,9 +165,11 @@ function App() {
           <select 
             value={userId} 
             onChange={(e) => {
-              setUserId(e.target.value)
-              loadData(e.target.value)
+              const newUserId = e.target.value
+              setUserId(newUserId)
+              setQuotaStatus(null)
               setMessages([{ role: 'ai', text: TEXTS.initialMessage }])
+              loadData(newUserId)
             }}
             className="user-select"
           >
@@ -180,8 +182,9 @@ function App() {
           <select 
             value={plan} 
             onChange={async (e) => {
-              await selectPlan(e.target.value)
-              await loadData(userId)
+              const newPlan = e.target.value
+              setQuotaStatus(prev => prev ? { ...prev, plan: newPlan } : null)
+              selectPlan(newPlan, userId).then(() => loadData(userId))
             }}
             className="plan-select"
           >
