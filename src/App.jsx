@@ -43,6 +43,7 @@ function App() {
   const [history, setHistory] = useState([])
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [rateLimitCountdown, setRateLimitCountdown] = useState(0)
+  const [userId, setUserId] = useState('usuario1')
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
@@ -57,11 +58,11 @@ function App() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function loadData() {
+  async function loadData(uid = userId) {
     try {
       const [status, historyData] = await Promise.all([
-        getQuotaStatus(),
-        getQuotaHistory()
+        getQuotaStatus(uid),
+        getQuotaHistory(uid)
       ])
       setQuotaStatus(status)
       setHistory(historyData)
@@ -80,7 +81,7 @@ function App() {
     setLoading(true)
 
     try {
-      const response = await generateText(userMessage)
+      const response = await generateText(userMessage, userId)
       setMessages(prev => [...prev, { role: 'ai', text: response.text }])
       await loadData()
     } catch (err) {
@@ -159,12 +160,28 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <h1>{TEXTS.header}</h1>
+        <div className="user-selector">
+          <label>Usuario: </label>
+          <select 
+            value={userId} 
+            onChange={(e) => {
+              setUserId(e.target.value)
+              loadData(e.target.value)
+              setMessages([{ role: 'ai', text: TEXTS.initialMessage }])
+            }}
+            className="user-select"
+          >
+            <option value="usuario1">Usuario 1</option>
+            <option value="usuario2">Usuario 2</option>
+            <option value="usuario3">Usuario 3</option>
+          </select>
+        </div>
         <div className="plan-selector">
           <select 
             value={plan} 
             onChange={async (e) => {
               await selectPlan(e.target.value)
-              await loadData()
+              await loadData(userId)
             }}
             className="plan-select"
           >

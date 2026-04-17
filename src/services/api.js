@@ -1,7 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
-export async function generateText(prompt) {
-  const response = await fetch(`${API_BASE}/ai/generate`, {
+export async function generateText(prompt, userId = 'usuario1') {
+  const response = await fetch(`${API_BASE}/ai/generate?userId=${userId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ prompt })
@@ -15,25 +15,25 @@ export async function generateText(prompt) {
   return response.json();
 }
 
-export async function getQuotaStatus() {
-  const response = await fetch(`${API_BASE}/quota/status`);
+export async function getQuotaStatus(userId = 'usuario1') {
+  const response = await fetch(`${API_BASE}/quota/status?userId=${userId}`);
   return response.json();
 }
 
-export async function getQuotaHistory() {
-  const response = await fetch(`${API_BASE}/quota/history`);
+export async function getQuotaHistory(userId = 'usuario1') {
+  const response = await fetch(`${API_BASE}/quota/history?userId=${userId}`);
   return response.json();
 }
 
-export async function upgradePlan() {
-  const response = await fetch(`${API_BASE}/quota/upgrade`, {
+export async function upgradePlan(userId = 'usuario1') {
+  const response = await fetch(`${API_BASE}/quota/upgrade?userId=${userId}`, {
     method: 'POST'
   });
   return response.json();
 }
 
-export async function selectPlan(plan) {
-  const response = await fetch(`${API_BASE}/quota/select-plan`, {
+export async function selectPlan(plan, userId = 'usuario1') {
+  const response = await fetch(`${API_BASE}/quota/select-plan?userId=${userId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ plan })
