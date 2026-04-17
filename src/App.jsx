@@ -28,7 +28,7 @@ const TEXTS = {
   upgradeMessage: 'Has alcanzado tu cuota mensual.Upgrade a PRO para continuar usando el servicio.',
   upgradeButton: 'Upgrade a PRO ($9.99/mes)',
   cancelButton: 'Más tarde',
-  initialMessage: '¡Hola! Envíame un prompt y generaré texto para ti.Tu uso se纪录a en tiempo real.',
+  initialMessage: '¡Hola! Envíame un prompt y generaré texto para ti. Tu uso registra en tiempo real.',
   you: 'Tú',
   ai: 'IA'
 }
