@@ -1,4 +1,4 @@
-const API_BASE = 'https://proxybackend-fe5z.onrender.com/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
 
 export async function generateText(prompt) {
   const response = await fetch(`${API_BASE}/ai/generate`, {
